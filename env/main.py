@@ -46,7 +46,8 @@ ScreenManager:
         orientation: 'vertical'
         
         MDLabel:
-            text: 'Bienvenue!'
+            id: bet_teams_label
+            text: ''
             theme_text_color: 'Primary'
             font_style: 'H4'
         
@@ -55,11 +56,45 @@ ScreenManager:
             on_release: app.go_to_login()
 
 '''
+
 class LoginScreen(Screen):
     pass
 
+
 class WelcomeScreen(Screen):
-    pass
+    def on_pre_enter(self):
+        # Obtener el ID de usuario desde el inicio de sesión
+        login_screen = self.manager.get_screen('login')
+       
+
+        try:
+            # Establecer conexión a la base de datos MySQL
+            conn = mysql.connector.connect(
+                host='localhost',
+                user='PEPE',
+                password='PEPE',
+                database='bdsuperbowl'
+            )
+
+            cursor = conn.cursor()
+            query = """
+                SELECT equipe1, equipe2
+                FROM mises
+                WHERE id_utilisateur = %s
+            """
+            cursor.execute(query, (self.user_id,))
+            user_bets = cursor.fetchall()
+
+            cursor.close()
+            conn.close()
+
+            # Mostrar los nombres de los equipos en la pantalla
+            bet_teams = ', '.join([f"{row[0]} vs {row[1]}" for row in user_bets])
+            self.ids.bet_teams_label.text = f"Mises:\n{bet_teams}"
+
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")
+
 
 class MyApp(MDApp):
     def build(self):
@@ -93,6 +128,8 @@ class MyApp(MDApp):
             user = cursor.fetchone()
             
             if user:
+                welcome_screen = self.screen_manager.get_screen('welcome')
+                welcome_screen.user_id = user[0]
                 self.screen_manager.current = 'welcome'
             else:
                 self.screen_manager.current = 'login'
