@@ -92,7 +92,7 @@ class WelcomeScreen(Screen):
             conn.close()
 
             # Mostrar los nombres de los equipos en la pantalla
-            bet_teams = ', '.join([f"{row[0]} vs {row[1]} - Date: {row[2]}, Debut: {row[3]}, Fin: {row[4]} {row[5]} " for row in user_bets])
+            bet_teams = '\n'.join([f"{row[0]} vs {row[1]} - Date: {row[2]}, Debut: {row[3]}, Fin: {row[4]} {row[5]} " for row in user_bets])
             self.ids.bet_teams_label.text = f"Mises:\n{bet_teams}"
 
         except mysql.connector.Error as err:
