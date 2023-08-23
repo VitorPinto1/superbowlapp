@@ -78,10 +78,13 @@ class WelcomeScreen(Screen):
 
             cursor = conn.cursor()
             query = """
-                SELECT equipe1, equipe2
+                SELECT matchs.equipe1, matchs.equipe2, matchs.jour, matchs.debut, matchs.fin,
+                CASE WHEN matchs.statut = 'Terminé' THEN matchs.score ELSE '  ' END AS score
                 FROM mises
-                WHERE id_utilisateur = %s
+                JOIN matchs ON mises.id_match = matchs.id
+                WHERE mises.id_utilisateur = %s
             """
+
             cursor.execute(query, (self.user_id,))
             user_bets = cursor.fetchall()
 
@@ -89,7 +92,7 @@ class WelcomeScreen(Screen):
             conn.close()
 
             # Mostrar los nombres de los equipos en la pantalla
-            bet_teams = ', '.join([f"{row[0]} vs {row[1]}" for row in user_bets])
+            bet_teams = ', '.join([f"{row[0]} vs {row[1]} - Date: {row[2]}, Debut: {row[3]}, Fin: {row[4]} {row[5]} " for row in user_bets])
             self.ids.bet_teams_label.text = f"Mises:\n{bet_teams}"
 
         except mysql.connector.Error as err:
