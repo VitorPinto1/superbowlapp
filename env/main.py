@@ -1,5 +1,8 @@
 from kivy.lang import Builder
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.boxlayout import BoxLayout
 from kivymd.app import MDApp
+from kivymd.uix.label import MDLabel
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.textfield import MDTextField
@@ -16,28 +19,37 @@ ScreenManager:
     
     BoxLayout:
         orientation: 'vertical'
-        spacing: '10dp'
-        padding: '20dp'
+        spacing: dp(10)
+        padding: dp(20)
         
         MDLabel:
             text: 'Login'
             theme_text_color: 'Primary'
             font_style: 'H4'
+            size_hint: (1, None)
+            height: dp(50)
             
         MDTextField:
             id: username_field
             hint_text: 'Email'
             required: True
+            size_hint: (1, None)
+            height: dp(50)
             
         MDTextField:
             id: password_field
             hint_text: 'Mot de passe'
             required: True
             password: True
+            size_hint: (1, None)
+            height: dp(50)
             
         MDRaisedButton:
             text: 'Se connecter'
             on_release: app.login()
+            size_hint_x: 0.5  # Ajusta el ancho del botón
+            size_hint_y: None
+            height: dp(50)
 
 <WelcomeScreen>:
     name: 'welcome'
@@ -45,28 +57,37 @@ ScreenManager:
     BoxLayout:
         orientation: 'vertical'
         
-        MDLabel:
-            id: bet_teams_label
-            text: ''
-            theme_text_color: 'Primary'
-            font_style: 'H4'
-        
+        ScrollView:
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint_y: None
+                height: self.minimum_height
+
+                MDLabel:
+                    id: bet_teams_label
+                    text: ''
+                    theme_text_color: 'Primary'
+                    font_style: 'H4'
+                    size_hint: (1, None)
+                    height: dp(50)
+            
         MDRaisedButton:
             text: 'Retourner au login'
             on_release: app.go_to_login()
+            size_hint_x: 0.5  # Ajusta el ancho del botón
+            size_hint_y: None
+            height: dp(50)
 
 '''
 
 class LoginScreen(Screen):
     pass
 
-
 class WelcomeScreen(Screen):
     def on_pre_enter(self):
         # Obtener el ID de usuario desde el inicio de sesión
         login_screen = self.manager.get_screen('login')
        
-
         try:
             # Establecer conexión a la base de datos MySQL
             conn = mysql.connector.connect(
@@ -91,26 +112,24 @@ class WelcomeScreen(Screen):
             cursor.close()
             conn.close()
 
-            # Mostrar los nombres de los equipos en la pantalla
+            # Mostrar los nombres de los equipos en el MDLabel
             bet_teams = '\n'.join([f"{row[0]} vs {row[1]} - Date: {row[2]}, Debut: {row[3]}, Fin: {row[4]} {row[5]} " for row in user_bets])
             self.ids.bet_teams_label.text = f"Mises:\n{bet_teams}"
 
         except mysql.connector.Error as err:
             print(f"Error: {err}")
 
-
 class MyApp(MDApp):
     def build(self):
-        """
-        self.screen_manager = ScreenManager()
-        self.screen_manager.add_widget(LoginScreen(name='login'))
-        self.screen_manager.add_widget(WelcomeScreen(name='welcome'))
-        self.screen_manager.current = 'login'
-        return self.screen_manager
-        """
         self.screen_manager = Builder.load_string(KV)
         return self.screen_manager
-      
+    
+    def on_start(self):
+        from kivy.core.window import Window
+        Window.size = (360, 640) 
+        Window.orientation = 'portrait'
+        
+    
     def login(self):
         login_screen = self.screen_manager.get_screen('login')
         username = login_screen.ids.username_field.text
@@ -142,8 +161,6 @@ class MyApp(MDApp):
             
         except mysql.connector.Error as err:
             print(f"Error: {err}")
-    
-  
 
     def go_to_login(self):
         self.screen_manager.current = 'login'
