@@ -1,6 +1,9 @@
 from kivy.lang import Builder
 from kivymd.app import MDApp
+from kivy.uix.image import Image
+from kivy.graphics import Rectangle
 from kivy.uix.scrollview import ScrollView
+from kivy.core.window import Window
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.label import MDLabel
 from kivy.uix.screenmanager import Screen, ScreenManager
@@ -88,9 +91,9 @@ ScreenManager:
             text: ''
             theme_text_color: 'Primary'
             font_style: 'H4'
-            
             valign: 'top'
-            
+            color: [1, 0, 0, 1] if root.user_bets and root.user_bets[0][6] == 'En cours' else [1, 1, 1, 1]
+                    
 
         MDRaisedButton:
             text: 'Retourner au login'
@@ -107,6 +110,7 @@ class LoginScreen(Screen):
     pass
 
 class WelcomeScreen(Screen):
+    user_bets = [] 
     def on_pre_enter(self):
         # Obtener el ID de usuario desde el inicio de sesión
         login_screen = self.manager.get_screen('login')
@@ -123,21 +127,32 @@ class WelcomeScreen(Screen):
 
             cursor = conn.cursor()
             query = """
-                SELECT matchs.equipe1, matchs.equipe2, matchs.jour, matchs.debut, matchs.fin,
-                CASE WHEN matchs.statut = 'Terminé' THEN matchs.score ELSE '  ' END AS score
+                SELECT matchs.id, matchs.equipe1, matchs.equipe2, matchs.jour, matchs.debut, matchs.fin,
+                CASE 
+                    WHEN matchs.statut = 'Terminé' THEN matchs.score 
+                    ELSE NULL 
+                END AS score,
+                CASE 
+                    WHEN matchs.statut = 'En cours' THEN 'En cours' 
+                    ELSE 'Terminé' 
+                END AS statut
                 FROM mises
                 JOIN matchs ON mises.id_match = matchs.id
                 WHERE mises.id_utilisateur = %s
             """
-
             cursor.execute(query, (self.user_id,))
             user_bets = cursor.fetchall()
 
             cursor.close()
             conn.close()
 
+            self.user_bets = user_bets
+
             # Mostrar los nombres de los equipos en el MDLabel
-            bet_teams = '\n'.join([f"{row[0]} vs {row[1]} - Date: {row[2]}, Debut: {row[3]}, Fin: {row[4]} {row[5]} " for row in user_bets])
+            bet_teams = '\n\n'.join([
+                f"{row[1]} vs {row[2]} - Date: {row[3]}, Debut: {row[4]}, Fin: {row[5]}, Resultat: {row[6]}" 
+                for row in user_bets
+            ])
             self.ids.bet_teams_label.text = f'{bet_teams}'
 
         except mysql.connector.Error as err:
@@ -146,12 +161,18 @@ class WelcomeScreen(Screen):
 class MyApp(MDApp):
     def build(self):
         self.screen_manager = Builder.load_string(KV)
+
+        with self.screen_manager.canvas.before:
+            self.bg = Rectangle(source='/Users/vitorpinto/Documents/ECF/AppPython/env/imagesite1.png', pos=self.screen_manager.pos, size=self.screen_manager.size)
+
         return self.screen_manager
+
     
     def on_start(self):
         from kivy.core.window import Window
         Window.size = (360, 640) 
         Window.orientation = 'portrait'
+        self.bg.size = Window.size
         
     
     def login(self):
