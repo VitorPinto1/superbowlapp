@@ -1,9 +1,9 @@
+from kivy.core.window import Window
 from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivy.uix.image import Image
 from kivy.graphics import Rectangle
 from kivy.uix.scrollview import ScrollView
-from kivy.core.window import Window
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.label import MDLabel
 from kivy.uix.screenmanager import Screen, ScreenManager
@@ -163,17 +163,21 @@ class MyApp(MDApp):
         self.screen_manager = Builder.load_string(KV)
 
         with self.screen_manager.canvas.before:
-            self.bg = Rectangle(source='/Users/vitorpinto/Documents/ECF/AppPython/env/imagesite1.png', pos=self.screen_manager.pos, size=self.screen_manager.size)
+            self.bg = Rectangle(source='/Users/vitorpinto/Documents/ECF/AppPython/env/imagesite1.png', pos=self.screen_manager.pos, size=Window.size)
 
+        Window.bind(size=self.on_window_size_change)
         return self.screen_manager
 
     
     def on_start(self):
-        from kivy.core.window import Window
+    
         Window.size = (360, 640) 
         Window.orientation = 'portrait'
-        self.bg.size = Window.size
-        
+        self.on_window_size_change(Window, Window.size)
+    
+    def on_window_size_change(self, instance, value):
+        self.bg.size = value
+
     
     def login(self):
         login_screen = self.screen_manager.get_screen('login')
