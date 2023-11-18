@@ -92,7 +92,7 @@ ScreenManager:
             theme_text_color: 'Primary'
             font_style: 'H4'
             valign: 'top'
-            color: [1, 0, 0, 1] if root.user_bets and root.user_bets[0][6] == 'En cours' else [1, 1, 1, 1]
+            
                     
 
         MDRaisedButton:
@@ -127,15 +127,7 @@ class WelcomeScreen(Screen):
 
             cursor = conn.cursor()
             query = """
-                SELECT matchs.id, matchs.equipe1, matchs.equipe2, matchs.jour, matchs.debut, matchs.fin,
-                CASE 
-                    WHEN matchs.statut = 'Terminé' THEN matchs.score 
-                    ELSE NULL 
-                END AS score,
-                CASE 
-                    WHEN matchs.statut = 'En cours' THEN 'En cours' 
-                    ELSE 'Terminé' 
-                END AS statut
+                SELECT matchs.id, matchs.equipe1, matchs.equipe2, matchs.jour, matchs.debut, matchs.fin, matchs.score, matchs.statut
                 FROM mises
                 JOIN matchs ON mises.id_match = matchs.id
                 WHERE mises.id_utilisateur = %s
@@ -150,7 +142,7 @@ class WelcomeScreen(Screen):
 
             # Mostrar los nombres de los equipos en el MDLabel
             bet_teams = '\n\n'.join([
-                f"{row[1]} vs {row[2]} - Date: {row[3]}, Debut: {row[4]}, Fin: {row[5]}, Resultat: {row[6]}" 
+                f"{row[1]} vs {row[2]} - Date: {row[3]}, Debut: {row[4]}, Fin: {row[5]}, Resultat: {row[6]}, Statut: {row[7]}" 
                 for row in user_bets
             ])
             self.ids.bet_teams_label.text = f'{bet_teams}'
