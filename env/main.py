@@ -85,14 +85,17 @@ ScreenManager:
                 halign: 'center'  # Alinea el texto en el centro horizontal
                 valign: 'center'  # Alinea el texto en el centro vertical
        
-
-        MDLabel:
-            id: bet_teams_label
-            text: ''
-            theme_text_color: 'Primary'
-            font_style: 'H4'
-            valign: 'top'
-            
+        ScrollView:
+            MDLabel:
+                id: bet_teams_label
+                text: ''
+                size_hint_y: None
+                height: self.texture_size[1]
+                theme_text_color: 'Primary'
+                font_style: 'H4'
+                valign: 'top'
+                halign: 'center'
+                
                     
 
         MDRaisedButton:
