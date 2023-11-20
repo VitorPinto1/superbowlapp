@@ -9,8 +9,7 @@ from kivymd.uix.label import MDLabel
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.textfield import MDTextField
-from kivymd.uix.list import OneLineListItem
-from kivymd.uix.list import TwoLineListItem
+
 from kivymd.uix.list import ThreeLineListItem
 
 import mysql.connector
@@ -162,10 +161,17 @@ class WelcomeScreen(Screen):
             line_one = f"{bet[1]} vs {bet[2]}"
             line_two = f"Date: {bet[3]}, Debut: {bet[4]}, Fin: {bet[5]}"
             line_three = f"Resultat: {bet[6]}, Statut: {bet[7]}"
-            list_item = ThreeLineListItem(text=line_one,
-                                          secondary_text=line_two,
-                                          tertiary_text=line_three,
-                                          on_release=lambda x, bet_id=bet[0]: self.open_bet_details(bet_id))
+            if bet[7] == "En cours":
+                list_item = ThreeLineListItem(text=line_one,
+                                            secondary_text=line_two,
+                                            tertiary_text=line_three,
+                                            on_release=lambda x, bet_id=bet[0]: self.open_bet_details(bet_id))
+            else:
+                list_item = ThreeLineListItem(text=line_one,
+                                            secondary_text=line_two,
+                                            tertiary_text=line_three,
+                                            theme_text_color='Secondary')
+                
             self.ids.bets_list.add_widget(list_item)
 
     def open_bet_details(self, bet_id):
