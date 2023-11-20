@@ -102,15 +102,40 @@ ScreenManager:
             size_hint_y: None
             height: dp(50)
             pos_hint: {"center_x": .5, "center_y": .5}
+
 <BetDetailScreen>:
     name: 'bet_detail'
     
-    MDLabel: 
-        id: detail_label
-        text: ''
-        halign: 'center'
-        size_hint_y: None
-        height: self.texture_size[1]
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint: 1, 1
+        padding: dp(10)
+        spacing: dp(10)
+
+        MDLabel:
+            text: 'Détails du match'
+            font_style: 'H5'
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+            padding_y: dp(20)
+
+        MDLabel:
+            id: detail_label  # Asegúrate de que este id esté definido
+            text: ''
+
+        
+
+        MDRaisedButton:
+            text: 'Retourner'
+            on_release: app.go_to_welcome()
+            size_hint_x: 0.5
+            size_hint_y: None
+            height: dp(50)
+            pos_hint: {"center_x": .5, "center_y": .5}
+
+        
+ 
 '''
 
 class LoginScreen(Screen):
@@ -239,6 +264,11 @@ class MyApp(MDApp):
 
     def go_to_login(self):
         self.screen_manager.current = 'login'
+    
+    def go_to_welcome(self):
+        # Cambia la pantalla actual a 'welcome'
+        self.screen_manager.current = 'welcome'
+
 
 class BetDetailScreen(Screen):
     pass
