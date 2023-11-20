@@ -10,6 +10,8 @@ from kivy.uix.screenmanager import Screen, ScreenManager
 from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.list import OneLineListItem
+from kivymd.uix.list import TwoLineListItem
+from kivymd.uix.list import ThreeLineListItem
 
 import mysql.connector
 
@@ -155,12 +157,15 @@ class WelcomeScreen(Screen):
             print(f"Error: {err}")
             self.user_bets = []  # Resetear la lista de apuestas en caso de error
 
-        # Actualizar la interfaz de usuario con la lista de apuestas
         for bet in self.user_bets:
-            # Formatear la información de la apuesta para mostrarla
-            bet_details = f"{bet[1]} vs {bet[2]} - Date: {bet[3]}, Debut: {bet[4]}, Fin: {bet[5]}, Resultat: {bet[6]}, Statut: {bet[7]}"
-            list_item = OneLineListItem(text=bet_details,
-                                        on_release=lambda x, bet_id=bet[0]: self.open_bet_details(bet_id))
+            # Formatear la información de la apuesta para mostrarla en tres líneas
+            line_one = f"{bet[1]} vs {bet[2]}"
+            line_two = f"Date: {bet[3]}, Debut: {bet[4]}, Fin: {bet[5]}"
+            line_three = f"Resultat: {bet[6]}, Statut: {bet[7]}"
+            list_item = ThreeLineListItem(text=line_one,
+                                          secondary_text=line_two,
+                                          tertiary_text=line_three,
+                                          on_release=lambda x, bet_id=bet[0]: self.open_bet_details(bet_id))
             self.ids.bets_list.add_widget(list_item)
 
     def open_bet_details(self, bet_id):
@@ -169,6 +174,8 @@ class WelcomeScreen(Screen):
         bet_detail_screen = self.manager.get_screen('bet_detail')
         bet_detail_screen.ids.detail_label.text = f"Details for bet {bet_id}"
         self.manager.current = 'bet_detail'
+
+ 
 
 
 class MyApp(MDApp):
