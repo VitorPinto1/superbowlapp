@@ -220,6 +220,10 @@ class WelcomeScreen(Screen):
     # If a bet_info value is None, it will not be displayed.
         bet_detail_screen = self.manager.get_screen('bet_detail')
         bet_detail_screen.bet_data = bet_info
+
+         # Determinar el color para 'resultat1' y 'resultat2' en base a 'vainqueur'
+        couleur_resultat1 = '33ff33' if bet_info.get('vainqueur') == bet_info.get('equipemise1') else 'ff3333'
+        couleur_resultat2 = '33ff33' if bet_info.get('vainqueur') == bet_info.get('equipemise2') else 'ff3333'
     
     # Creating a list of strings for each bet detail
         details = [
@@ -229,14 +233,15 @@ class WelcomeScreen(Screen):
             f"Fecha de fin: {bet_info['fin']}",
             f"Apuesta en equipo 1: {bet_info['mise1']}" if bet_info['mise1'] is not None else "",
             f"Apuesta en equipo 2: {bet_info['mise2']}" if bet_info['mise2'] is not None else "",
-            f"Resultado equipo 1: {bet_info['resultat1']}" if bet_info['resultat1'] is not None else "",
-            f"Resultado equipo 2: {bet_info['resultat2']}" if bet_info['resultat2'] is not None else "",
+            f"[color={couleur_resultat1}]Resultado equipo 1: {bet_info['resultat1']}[/color]" if bet_info['resultat1'] is not None and bet_info['vainqueur']!= '-' else "",
+            f"[color={couleur_resultat2}]Resultado equipo 2: {bet_info['resultat2']}[/color]" if bet_info['resultat2'] is not None and bet_info['vainqueur']!= '-' else "",
             f"Equipo ganador: {bet_info['vainqueur']}" if bet_info['vainqueur'] != '-' else ""
         ]
     
         # Joining the details and filtering out empty strings
         detail_text = "\n".join(filter(None, details))
-    
+
+        bet_detail_screen.ids.detail_label.markup = True
         # Setting the label text to the joined details
         bet_detail_screen.ids.detail_label.text = detail_text
 
