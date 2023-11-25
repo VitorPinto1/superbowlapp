@@ -9,7 +9,7 @@ from kivymd.uix.label import MDLabel
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.textfield import MDTextField
-
+from kivy.properties import DictProperty
 from kivymd.uix.list import ThreeLineListItem
 
 import mysql.connector
@@ -183,14 +183,28 @@ class WelcomeScreen(Screen):
 
         for bet in self.user_bets:
             # Formatear la información de la apuesta para mostrarla en tres líneas
+            bet_info = {
+                'equipe1': bet[1],
+                'equipe2': bet[2],
+                'debut': bet[4],
+                'fin': bet[5],
+                'mise1': bet[8],
+                'mise2': bet[9],
+                'resultat1': bet[10],
+                'resultat2': bet[11],
+                'equipemise1': bet[12],
+                'equipemise2': bet[13],
+                'vainqueur': bet[14]
+            }
+
             line_one = f"{bet[1]} vs {bet[2]}"
             line_two = f"Date: {bet[3]}, Debut: {bet[4]}, Fin: {bet[5]}"
-            line_three = f"Resultat: {bet[6]}, Statut: {bet[7]}, mise: {bet[8]}"
+            line_three = f"Resultat: {bet[6]}, Statut: {bet[7]}, 'Vainqueur': {bet[14]}"
             if bet[7] == "En cours":
                 list_item = ThreeLineListItem(text=line_one,
                                             secondary_text=line_two,
                                             tertiary_text=line_three,
-                                            on_release=lambda x, bet_id=bet[0]: self.open_bet_details(bet_id))
+                                            on_release=lambda x, bet_info=bet_info: self.open_bet_details(bet_info))
                                        
             else:
                 list_item = ThreeLineListItem(text=line_one,
@@ -200,11 +214,23 @@ class WelcomeScreen(Screen):
                 
             self.ids.bets_list.add_widget(list_item)
 
-    def open_bet_details(self, bet_id):
+    def open_bet_details(self, bet_info):
         # Aquí estableces la lógica para abrir la pantalla de detalles de la apuesta
         # Por ejemplo, puedes pasar el ID de la apuesta a la pantalla de detalles
         bet_detail_screen = self.manager.get_screen('bet_detail')
-        bet_detail_screen.ids.detail_label.text = f"Details for bet {bet_id}"
+        bet_detail_screen.bet_data = bet_info
+        bet_detail_screen.ids.detail_label.text = (
+            f"Equipo 1: {bet_info['equipe1']}\n"
+            f"Equipo 2: {bet_info['equipe2']}\n"
+            f"Fecha de inicio: {bet_info['debut']}\n"
+            f"Fecha de fin: {bet_info['fin']}\n"
+            f"Apuesta en equipo 1: {bet_info['mise1']}\n"
+            f"Apuesta en equipo 2: {bet_info['mise2']}\n"
+            f"Resultado equipo 1: {bet_info['resultat1']}\n"
+            f"Resultado equipo 2: {bet_info['resultat2']}\n"
+            f"Equipo ganador: {bet_info['vainqueur']}\n"
+        )
+
         self.manager.current = 'bet_detail'
 
  
@@ -273,6 +299,5 @@ class MyApp(MDApp):
 
 class BetDetailScreen(Screen):
     pass
-
 if __name__ == '__main__':
     MyApp().run()
