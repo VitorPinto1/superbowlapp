@@ -227,15 +227,14 @@ class WelcomeScreen(Screen):
     
     # Creating a list of strings for each bet detail
         details = [
-            f"Equipo 1: {bet_info['equipe1']}",
-            f"Equipo 2: {bet_info['equipe2']}",
-            f"Fecha de inicio: {bet_info['debut']}",
-            f"Fecha de fin: {bet_info['fin']}",
-            f"Apuesta en equipo 1: {bet_info['mise1']}" if bet_info['mise1'] is not None else "",
-            f"Apuesta en equipo 2: {bet_info['mise2']}" if bet_info['mise2'] is not None else "",
-            f"[color={couleur_resultat1}]Resultado equipo 1: {bet_info['resultat1']}[/color]" if bet_info['resultat1'] is not None and bet_info['vainqueur']!= '-' else "",
-            f"[color={couleur_resultat2}]Resultado equipo 2: {bet_info['resultat2']}[/color]" if bet_info['resultat2'] is not None and bet_info['vainqueur']!= '-' else "",
-            f"Equipo ganador: {bet_info['vainqueur']}" if bet_info['vainqueur'] != '-' else ""
+            f"{bet_info['equipe1']} VS {bet_info['equipe2']}",
+            f"Debut: {bet_info['debut']}",
+            f"Fin: {bet_info['fin']}",
+            f"Mise {bet_info['equipemise1']}: {str(int(bet_info['mise1']))}" if bet_info['mise1'] is not None else "",
+            f"Mise {bet_info['equipemise2']}: {str(int(bet_info['mise2']))}" if bet_info['mise2'] is not None else "",
+            f"[color={couleur_resultat1}]Resultat : {str(int(bet_info['mise1'])) if couleur_resultat1 == 'ff3333' else str(bet_info['resultat1'])}[/color]" if bet_info.get('resultat1') is not None and bet_info.get('vainqueur') != '-' else "",
+            f"[color={couleur_resultat2}]Resultat : {str(int(bet_info['mise2'])) if couleur_resultat1 == 'ff3333' else str(bet_info['resultat2'])}[/color]" if bet_info.get('resultat2') is not None and bet_info.get('vainqueur') != '-' else "",
+            f"Vainqueur: {bet_info['vainqueur']}" if bet_info['vainqueur'] != '-' else ""
         ]
     
         # Joining the details and filtering out empty strings
