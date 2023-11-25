@@ -163,7 +163,7 @@ class WelcomeScreen(Screen):
                 # Utiliza parámetros seguros para prevenir la inyección de SQL
                 cursor.execute("""
                     SELECT matchs.id, matchs.equipe1, matchs.equipe2, matchs.jour, matchs.debut, 
-                    matchs.fin, matchs.score, matchs.statut, mises.mise1, mises.mise2, mises.resultat1, mises.resultat2, mises.equipe1, mises.equipe2, matchs.vainqueur
+                    matchs.fin, matchs.score, matchs.statut, mises.mise1, mises.mise2, mises.resultat1, mises.resultat2, mises.equipe1, mises.equipe2, matchs.vainqueur, matchs.commentaires
                     FROM mises
                     JOIN matchs ON mises.id_match = matchs.id
                     WHERE mises.id_utilisateur = %s
@@ -194,12 +194,15 @@ class WelcomeScreen(Screen):
                 'resultat2': bet[11],
                 'equipemise1': bet[12],
                 'equipemise2': bet[13],
-                'vainqueur': bet[14]
+                'vainqueur': bet[14],
+                'score': bet[6],
+                'commentaires' : bet[15]
             }
 
             line_one = f"{bet[1]} vs {bet[2]}"
             line_two = f"Date: {bet[3]}, Debut: {bet[4]}, Fin: {bet[5]}"
-            line_three = f"Resultat: {bet[6]}, Statut: {bet[7]}, 'Vainqueur': {bet[14]}"
+            line_three = f"Score: {bet[6] if bet[6] is not None else '-'} , Statut: {bet[7]}, Vainqueur: {bet[14]}"
+
             if bet[7] == "En cours":
                 list_item = ThreeLineListItem(text=line_one,
                                             secondary_text=line_two,
@@ -234,6 +237,8 @@ class WelcomeScreen(Screen):
             f"Mise {bet_info['equipemise2']}: {str(int(bet_info['mise2']))}" if bet_info['mise2'] is not None else "",
             f"[color={couleur_resultat1}]Resultat : {str(int(bet_info['mise1'])) if couleur_resultat1 == 'ff3333' else str(bet_info['resultat1'])}[/color]" if bet_info.get('resultat1') is not None and bet_info.get('vainqueur') != '-' else "",
             f"[color={couleur_resultat2}]Resultat : {str(int(bet_info['mise2'])) if couleur_resultat1 == 'ff3333' else str(bet_info['resultat2'])}[/color]" if bet_info.get('resultat2') is not None and bet_info.get('vainqueur') != '-' else "",
+            f"Score: {bet_info['score']}" if bet_info['score'] is not None else "",
+            f"Commentaires: {bet_info['commentaires']}" if bet_info['commentaires'] != ' - ' else "",
             f"Vainqueur: {bet_info['vainqueur']}" if bet_info['vainqueur'] != '-' else ""
         ]
     
