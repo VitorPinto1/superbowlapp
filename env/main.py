@@ -118,7 +118,7 @@ ScreenManager:
             halign: 'center'
             size_hint_y: None
             height: self.texture_size[1]
-            padding_y: dp(20)
+            padding: dp(20)
 
         MDLabel:
             id: detail_label  # Asegúrate de que este id esté definido
@@ -163,7 +163,7 @@ class WelcomeScreen(Screen):
                 # Utiliza parámetros seguros para prevenir la inyección de SQL
                 cursor.execute("""
                     SELECT matchs.id, matchs.equipe1, matchs.equipe2, matchs.jour, matchs.debut, 
-                    matchs.fin, matchs.score, matchs.statut
+                    matchs.fin, matchs.score, matchs.statut, mises.mise1, mises.mise2, mises.resultat1, mises.resultat2, mises.equipe1, mises.equipe2, matchs.vainqueur
                     FROM mises
                     JOIN matchs ON mises.id_match = matchs.id
                     WHERE mises.id_utilisateur = %s
@@ -185,12 +185,13 @@ class WelcomeScreen(Screen):
             # Formatear la información de la apuesta para mostrarla en tres líneas
             line_one = f"{bet[1]} vs {bet[2]}"
             line_two = f"Date: {bet[3]}, Debut: {bet[4]}, Fin: {bet[5]}"
-            line_three = f"Resultat: {bet[6]}, Statut: {bet[7]}"
+            line_three = f"Resultat: {bet[6]}, Statut: {bet[7]}, mise: {bet[8]}"
             if bet[7] == "En cours":
                 list_item = ThreeLineListItem(text=line_one,
                                             secondary_text=line_two,
                                             tertiary_text=line_three,
                                             on_release=lambda x, bet_id=bet[0]: self.open_bet_details(bet_id))
+                                       
             else:
                 list_item = ThreeLineListItem(text=line_one,
                                             secondary_text=line_two,
