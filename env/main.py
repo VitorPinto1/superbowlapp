@@ -216,22 +216,31 @@ class WelcomeScreen(Screen):
             self.ids.bets_list.add_widget(list_item)
 
     def open_bet_details(self, bet_info):
-        # Aquí estableces la lógica para abrir la pantalla de detalles de la apuesta
-        # Por ejemplo, puedes pasar el ID de la apuesta a la pantalla de detalles
+    # This function opens the bet details screen with the provided bet information.
+    # If a bet_info value is None, it will not be displayed.
         bet_detail_screen = self.manager.get_screen('bet_detail')
         bet_detail_screen.bet_data = bet_info
-        bet_detail_screen.ids.detail_label.text = (
-            f"Equipo 1: {bet_info['equipe1']}\n"
-            f"Equipo 2: {bet_info['equipe2']}\n"
-            f"Fecha de inicio: {bet_info['debut']}\n"
-            f"Fecha de fin: {bet_info['fin']}\n"
-            f"Apuesta en equipo 1: {bet_info['mise1']}\n"
-            f"Apuesta en equipo 2: {bet_info['mise2']}\n"
-            f"Resultado equipo 1: {bet_info['resultat1']}\n"
-            f"Resultado equipo 2: {bet_info['resultat2']}\n"
-            f"Equipo ganador: {bet_info['vainqueur']}\n"
-        )
+    
+    # Creating a list of strings for each bet detail
+        details = [
+            f"Equipo 1: {bet_info['equipe1']}",
+            f"Equipo 2: {bet_info['equipe2']}",
+            f"Fecha de inicio: {bet_info['debut']}",
+            f"Fecha de fin: {bet_info['fin']}",
+            f"Apuesta en equipo 1: {bet_info['mise1']}" if bet_info['mise1'] is not None else "",
+            f"Apuesta en equipo 2: {bet_info['mise2']}" if bet_info['mise2'] is not None else "",
+            f"Resultado equipo 1: {bet_info['resultat1']}" if bet_info['resultat1'] is not None else "",
+            f"Resultado equipo 2: {bet_info['resultat2']}" if bet_info['resultat2'] is not None else "",
+            f"Equipo ganador: {bet_info['vainqueur']}" if bet_info['vainqueur'] != '-' else ""
+        ]
+    
+        # Joining the details and filtering out empty strings
+        detail_text = "\n".join(filter(None, details))
+    
+        # Setting the label text to the joined details
+        bet_detail_screen.ids.detail_label.text = detail_text
 
+        # Changing the current screen to the bet detail screen
         self.manager.current = 'bet_detail'
 
  
