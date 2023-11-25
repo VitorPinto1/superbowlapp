@@ -210,7 +210,8 @@ class WelcomeScreen(Screen):
                 list_item = ThreeLineListItem(text=line_one,
                                             secondary_text=line_two,
                                             tertiary_text=line_three,
-                                            theme_text_color='Secondary')
+                                            theme_text_color='Secondary',
+                                            on_release=lambda x, bet_info=bet_info: self.open_bet_details(bet_info))
                 
             self.ids.bets_list.add_widget(list_item)
 
