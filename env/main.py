@@ -12,8 +12,17 @@ from kivymd.uix.textfield import MDTextField
 from kivy.properties import DictProperty
 from kivymd.uix.list import ThreeLineListItem
 from kivy.clock import Clock
+from dotenv import load_dotenv
+import os
 
 import mysql.connector
+
+load_dotenv()
+db_host = os.environ.get('DB_HOST')
+db_user = os.environ.get('DB_USER')
+db_password = os.environ.get('DB_PASSWORD')
+db_name = os.environ.get('DB_NAME')
+
 
 # Design
 KV = '''
@@ -158,10 +167,10 @@ class WelcomeScreen(Screen):
         try:
             # Establecer conexión a la base de datos MySQL
             conn = mysql.connector.connect(
-                host='localhost',
-                user='PEPE',
-                password='PEPE',
-                database='bdsuperbowl'
+                host=db_host,
+                user=db_user,
+                password=db_password,
+                database=db_name
             )
             cursor = conn.cursor()
             # Asegúrate de que 'user_id' está definido y no es None
