@@ -11,6 +11,7 @@ from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.textfield import MDTextField
 from kivy.properties import DictProperty
 from kivymd.uix.list import ThreeLineListItem
+from kivy.clock import Clock
 
 import mysql.connector
 
@@ -145,6 +146,11 @@ class WelcomeScreen(Screen):
     user_id = None  # Asumiremos que este valor se establece en alguna parte antes de entrar a la pantalla
 
     def on_pre_enter(self, *args):
+        # Programar la actualización cada 30 segundos
+        self.update_bets()
+        Clock.schedule_interval(lambda dt: self.update_bets(), 30)
+
+    def update_bets(self):
         # Limpiar la lista cada vez que se entra a la pantalla para evitar duplicados
         self.ids.bets_list.clear_widgets()
         
@@ -215,7 +221,8 @@ class WelcomeScreen(Screen):
                                             tertiary_text=line_three,
                                             theme_text_color='Secondary',
                                             on_release=lambda x, bet_info=bet_info: self.open_bet_details(bet_info))
-                
+            
+            print("actualisation")
             self.ids.bets_list.add_widget(list_item)
 
     def open_bet_details(self, bet_info):
@@ -252,7 +259,8 @@ class WelcomeScreen(Screen):
         # Changing the current screen to the bet detail screen
         self.manager.current = 'bet_detail'
 
- 
+    def on_leave(self, *args):
+        Clock.unschedule(self.update_bets)
 
 
 class MyApp(MDApp):
