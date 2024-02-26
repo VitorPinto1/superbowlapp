@@ -23,10 +23,19 @@ db_user = os.environ.get('DB_USER')
 db_password = os.environ.get('DB_PASSWORD')
 db_name = os.environ.get('DB_NAME')
 
+Window.size = (360, 640)
 
 # Design
 KV = '''
+
 ScreenManager:
+    canvas.before:
+        Color:
+            rgba: 0.6, 0.9, 0.6, 1
+
+        Rectangle:
+            pos: self.pos
+            size: self.size
     LoginScreen:
     WelcomeScreen:
     BetDetailScreen:
@@ -34,49 +43,48 @@ ScreenManager:
 <LoginScreen>:
     name: 'login'
     
-    BoxLayout:
+    MDCard:
         orientation: 'vertical'
-        spacing: dp(10)
+        size_hint: None, None
+        size: dp(320), dp(400)
+        pos_hint: {"center_x": .5, "center_y": .55}
+        elevation: 5
         padding: dp(20)
+        spacing: dp(20)
+        radius: [25, 25, 25, 25] 
         
         MDLabel:
             text: 'Login'
             theme_text_color: 'Primary'
             font_style: 'H4'
-            pos_hint: {'center_y':.20}
+            size_hint_y: None
+            height: self.texture_size[1]
+            pos_hint: {'center_y': .20}
             halign: 'center'
-            
-            
-            
-           
-            
+        
         MDTextField:
             id: username_field
             hint_text: 'Email'
             required: True
-            size_hint: (1, None)
-            
-            pos_hint: {"center_x": .5, "center_y": .5}
+            size_hint_x: 1
+            pos_hint: {"center_x": .5}
           
-            
         MDTextField:
             id: password_field
             hint_text: 'Mot de passe'
             required: True
             password: True
-            size_hint: (1, None)
+            size_hint_x: 1
+            pos_hint: {"center_x": .5}
            
-            pos_hint: {"center_x": .5, "center_y": .5}
-           
-
         MDRaisedButton:
             text: 'Se connecter'
             on_release: app.login()
-            size_hint_x: 0.5  # Ajusta el ancho del botón
+            size_hint_x: 0.5
             size_hint_y: None
             height: dp(50)
-            pos_hint: {"center_x": .5, "center_y": .5}
-           
+            pos_hint: {"center_x": .5}
+
 
 <WelcomeScreen>:
     name: 'welcome'
@@ -87,31 +95,38 @@ ScreenManager:
         spacing: dp(10)
         padding: dp(20)
 
-        BoxLayout:
-            orientation: 'horizontal'
+        MDLabel:
+            text: 'Mises:'
+            theme_text_color: 'Primary'
+            font_style: 'H4'
             size_hint_y: None
-            height: dp(50)  # Altura fija para el encabezado
+            height: self.texture_size[1]
+            halign: 'center'
+            padding_y: dp(10)
 
-            MDLabel:
-                text: 'Mises:'
-                theme_text_color: 'Primary'
-                font_style: 'H4'
-                halign: 'center'  # Alinea el texto en el centro horizontal
-                valign: 'center'  # Alinea el texto en el centro vertical
-       
-        ScrollView:
-            MDList:
-                id: bets_list
-                
+        MDCard:
+            orientation: 'vertical'
+            size_hint: 1, None
+            height: self.minimum_height
+            padding: dp(10)
+            spacing: dp(10)
+            elevation: 5
+            radius: [20]
+            
+            ScrollView:
+                size_hint_y: None
+                height: dp(400)  # Ajusta este valor según sea necesario
+
+                MDList:
+                    id: bets_list
                     
-
-        MDRaisedButton:
-            text: 'Retourner au login'
-            on_release: app.go_to_login()
-            size_hint_x: 0.5
-            size_hint_y: None
-            height: dp(50)
-            pos_hint: {"center_x": .5, "center_y": .5}
+            MDRaisedButton:
+                text: 'Retourner au login'
+                on_release: app.go_to_login()
+                size_hint_x: 0.5
+                size_hint_y: None
+                height: dp(50)
+                pos_hint: {"center_x": .5}
 
 <BetDetailScreen>:
     name: 'bet_detail'
@@ -275,22 +290,18 @@ class WelcomeScreen(Screen):
 class MyApp(MDApp):
     def build(self):
         self.screen_manager = Builder.load_string(KV)
-
-        with self.screen_manager.canvas.before:
-            self.bg = Rectangle(source='/Users/vitorpinto/Documents/ECF/AppPython/env/imagesite1.png', pos=self.screen_manager.pos, size=Window.size)
-
-        Window.bind(size=self.on_window_size_change)
         return self.screen_manager
 
+  
     
     def on_start(self):
     
-        Window.size = (360, 640) 
         Window.orientation = 'portrait'
-        self.on_window_size_change(Window, Window.size)
     
-    def on_window_size_change(self, instance, value):
-        self.bg.size = value
+    
+
+
+    
 
     
     def login(self):
@@ -301,10 +312,10 @@ class MyApp(MDApp):
         try:
             # Establecer conexión a la base de datos MySQL
             conn = mysql.connector.connect(
-                host='localhost',
-                user='PEPE',
-                password='PEPE',
-                database='bdsuperbowl'
+                host=db_host,
+                user=db_user,
+                password=db_password,
+                database=db_name
             )
             
             cursor = conn.cursor()
