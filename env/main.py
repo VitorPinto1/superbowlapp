@@ -29,29 +29,59 @@ Window.size = (360, 640)
 KV = '''
 
 ScreenManager:
+
+
     canvas.before:
         Color:
-            rgba: 0.6, 0.9, 0.6, 1
+            rgba: 0, 0, 0, 1
 
         Rectangle:
             pos: self.pos
             size: self.size
+   
     LoginScreen:
     WelcomeScreen:
     BetDetailScreen:
 
+    
+
+
+
 <LoginScreen>:
     name: 'login'
-    
+
+
+    FloatLayout:
+        Image:
+            source: 'env/sources/super_bowl_logo.png'
+            size_hint: 1, None
+            height: '50dp'
+            allow_stretch: False
+            keep_ratio: True
+            pos_hint: {"top": 0.98}  
+
     MDCard:
         orientation: 'vertical'
         size_hint: None, None
         size: dp(320), dp(400)
         pos_hint: {"center_x": .5, "center_y": .55}
-        elevation: 5
+        elevation: 1
         padding: dp(20)
         spacing: dp(20)
         radius: [25, 25, 25, 25] 
+       
+
+        canvas.before:
+            Color:
+                rgba: 0.435, 0.259, 0.757, 1
+            BoxShadow:
+                pos: self.pos
+                size: self.size
+                offset: 0, 0
+                spread_radius: -20, -20
+                border_radius: 10, 10, 10, 10
+                blur_radius: 120
+        
         
         MDLabel:
             text: 'Login'
@@ -68,6 +98,7 @@ ScreenManager:
             required: True
             size_hint_x: 1
             pos_hint: {"center_x": .5}
+            
           
         MDTextField:
             id: password_field
@@ -76,7 +107,7 @@ ScreenManager:
             password: True
             size_hint_x: 1
             pos_hint: {"center_x": .5}
-           
+            
         MDRaisedButton:
             text: 'Se connecter'
             on_release: app.login()
@@ -88,6 +119,15 @@ ScreenManager:
 
 <WelcomeScreen>:
     name: 'welcome'
+
+    FloatLayout:
+        Image:
+            source: 'env/sources/super_bowl_logo.png'
+            size_hint: 1, None
+            height: '50dp'
+            allow_stretch: False
+            keep_ratio: True
+            pos_hint: {"top": 0.98}  
     
     BoxLayout:
         orientation: 'vertical'
@@ -97,7 +137,8 @@ ScreenManager:
 
         MDLabel:
             text: 'Mises:'
-            theme_text_color: 'Primary'
+            theme_text_color: 'Custom'
+            text_color: 1, 1, 1, 1
             font_style: 'H4'
             size_hint_y: None
             height: self.texture_size[1]
@@ -110,8 +151,19 @@ ScreenManager:
             height: self.minimum_height
             padding: dp(10)
             spacing: dp(10)
-            elevation: 5
-            radius: [20]
+            elevation: 1
+            radius: [25, 25, 25, 25]
+
+            canvas.before:
+                Color:
+                    rgba: 0.435, 0.259, 0.757, 1
+                BoxShadow:
+                    pos: self.pos
+                    size: self.size
+                    offset: 0, 0
+                    spread_radius: -20, -20
+                    border_radius: 10, 10, 10, 10
+                    blur_radius: 120
             
             ScrollView:
                 size_hint_y: None
@@ -131,35 +183,62 @@ ScreenManager:
 <BetDetailScreen>:
     name: 'bet_detail'
     
-    BoxLayout:
-        orientation: 'vertical'
-        size_hint: 1, 1
-        padding: dp(10)
-        spacing: dp(10)
+    FloatLayout:
+        Image:
+            source: 'env/sources/super_bowl_logo.png'
+            size_hint: 1, None
+            height: '50dp'
+            allow_stretch: False
+            keep_ratio: True
+            pos_hint: {"top": 0.98}  
 
         MDLabel:
             text: 'Détails du match'
-            font_style: 'H5'
-            halign: 'center'
+            theme_text_color: 'Custom'
+            text_color: 1, 1, 1, 1
+            font_style: 'H4'
             size_hint_y: None
             height: self.texture_size[1]
-            padding: dp(20)
+            halign: 'center'
+            padding_y: dp(10)
+            pos_hint: {"center_x": 0.5, "top": 0.9}
 
-        MDLabel:
-            id: detail_label  # Asegúrate de que este id esté definido
-            text: ''
+        MDCard:
+            size_hint: None, None
+            size: "260dp", "200dp"
+            pos_hint: {"center_x": 0.5, "top": 0.7}
+            elevation: 1
+            padding: "8dp"
+            spacing: "10dp"
+            radius: [25, 25, 25, 25]
+            
+            canvas.before:
+                Color:
+                    rgba: 0.435, 0.259, 0.757, 1
+                BoxShadow:
+                    pos: self.pos
+                    size: self.size
+                    offset: 0, 0
+                    spread_radius: -20, -20
+                    border_radius: 10, 10, 10, 10
+                    blur_radius: 120
 
-        
+            MDLabel:
+                id: detail_label
+                text: ''
+                halign: 'center'
+                valign: 'top'
+                size_hint_y: None
+                height: self.texture_size[1]
 
         MDRaisedButton:
             text: 'Retourner'
             on_release: app.go_to_welcome()
-            size_hint_x: 0.5
-            size_hint_y: None
-            height: dp(50)
-            pos_hint: {"center_x": .5, "center_y": .5}
+            size_hint: None, None
+            size: "200dp", "50dp"
+            pos_hint: {"center_x": .5, "top": 0.1}
 
-        
+
  
 '''
 
@@ -297,12 +376,6 @@ class MyApp(MDApp):
     def on_start(self):
     
         Window.orientation = 'portrait'
-    
-    
-
-
-    
-
     
     def login(self):
         login_screen = self.screen_manager.get_screen('login')
