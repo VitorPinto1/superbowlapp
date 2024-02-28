@@ -115,6 +115,7 @@ ScreenManager:
             size_hint_y: None
             height: dp(50)
             pos_hint: {"center_x": .5}
+            md_bg_color: 0.435, 0.259, 0.757, 1
 
 
 <WelcomeScreen>:
@@ -179,6 +180,7 @@ ScreenManager:
                 size_hint_y: None
                 height: dp(50)
                 pos_hint: {"center_x": .5}
+                md_bg_color: 0.435, 0.259, 0.757, 1
 
 <BetDetailScreen>:
     name: 'bet_detail'
@@ -201,7 +203,7 @@ ScreenManager:
             height: self.texture_size[1]
             halign: 'center'
             padding_y: dp(10)
-            pos_hint: {"center_x": 0.5, "top": 0.9}
+            pos_hint: {"center_x": 0.5, "top": 0.86}
 
         MDCard:
             size_hint: None, None
@@ -230,6 +232,7 @@ ScreenManager:
                 valign: 'top'
                 size_hint_y: None
                 height: self.texture_size[1]
+                pos_hint: {"center_x": 0.5, "top": 0.98}
 
         MDRaisedButton:
             text: 'Retourner'
@@ -237,6 +240,7 @@ ScreenManager:
             size_hint: None, None
             size: "200dp", "50dp"
             pos_hint: {"center_x": .5, "top": 0.1}
+            md_bg_color: 0.435, 0.259, 0.757, 1
 
 
  
