@@ -7,12 +7,17 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.label import MDLabel
 from kivy.uix.screenmanager import Screen, ScreenManager
-from kivymd.uix.button import MDRaisedButton
+from kivymd.uix.button import MDRaisedButton, MDFlatButton
 from kivymd.uix.textfield import MDTextField
 from kivy.properties import DictProperty
 from kivymd.uix.list import ThreeLineListItem
 from kivy.clock import Clock
 from dotenv import load_dotenv
+from kivymd.uix.dialog import MDDialog
+
+from werkzeug.security import check_password_hash
+
+
 import os
 
 import mysql.connector
@@ -24,6 +29,8 @@ db_password = os.environ.get('DB_PASSWORD')
 db_name = os.environ.get('DB_NAME')
 
 Window.size = (360, 640)
+
+
 
 # Design
 KV = '''
@@ -381,44 +388,83 @@ class MyApp(MDApp):
     
         Window.orientation = 'portrait'
     
+   
     def login(self):
         login_screen = self.screen_manager.get_screen('login')
         username = login_screen.ids.username_field.text
         password = login_screen.ids.password_field.text
-        
+
+        if not username or not password:
+            self.show_error_dialog("Por favor, introduce tanto el correo electrónico como la contraseña.")
+            self.screen_manager.current = 'login'
+            return
+
         try:
-            # Establecer conexión a la base de datos MySQL
-            conn = mysql.connector.connect(
-                host=db_host,
-                user=db_user,
-                password=db_password,
-                database=db_name
-            )
             
+            conn = mysql.connector.connect(host=db_host, user=db_user, password=db_password, database=db_name)
             cursor = conn.cursor()
-            query = "SELECT * FROM users WHERE email = %s AND mot_de_passe = %s"
-            cursor.execute(query, (username, password))
+            query = "SELECT * FROM users WHERE email = %s"
+            cursor.execute(query, (username,))
             user = cursor.fetchone()
-            
+
             if user:
-                welcome_screen = self.screen_manager.get_screen('welcome')
-                welcome_screen.user_id = user[0]
-                self.screen_manager.current = 'welcome'
+
+                stored_password_hash = user[4]
+                
+
+         
+                if check_password_hash(stored_password_hash, password):
+                  
+                    welcome_screen = self.screen_manager.get_screen('welcome')
+                    welcome_screen.user_id = user[0]
+                    self.screen_manager.current = 'welcome'
+                else:
+                    # Falla de autenticación
+                     self.show_error_dialog("La contraseña es incorrecta.")
             else:
-                self.screen_manager.current = 'login'
-            
+                # Usuario no encontrado
+                 self.show_error_dialog("El usuario no fue encontrado.")
+
             cursor.close()
             conn.close()
-            
-        except mysql.connector.Error as err:
-            print(f"Error: {err}")
 
+        except mysql.connector.Error as err:
+            self.show_error_dialog("Error al conectarse a la base de datos.")
+        
     def go_to_login(self):
         self.screen_manager.current = 'login'
     
     def go_to_welcome(self):
         # Cambia la pantalla actual a 'welcome'
         self.screen_manager.current = 'welcome'
+
+    def show_error_dialog(self, message):
+        # Define el botón del diálogo aquí para asegurarte de que se recrea cada vez
+        ok_button = MDFlatButton(
+            text="OK",
+            theme_text_color="Custom",
+            text_color=self.theme_cls.primary_color,
+            on_release=lambda instance: self.dialog.dismiss()
+        )
+
+        # Si el diálogo ya existe, simplemente actualizamos el texto y los botones
+        if hasattr(self, 'dialog'):
+            self.dialog.text = message
+            self.dialog.buttons = [ok_button]
+        else:
+            # Crear el diálogo si no existe
+            self.dialog = MDDialog(
+                text=message,
+                buttons=[ok_button]
+            )
+
+        self.dialog.open()
+
+    def close_dialog(self, instance_button):
+        # Desvincular el evento para evitar referencias circulares y luego cerrar el diálogo
+        instance_button.unbind(on_release=self.close_dialog)
+        self.dialog.dismiss()
+
 
 
 class BetDetailScreen(Screen):
