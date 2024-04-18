@@ -175,7 +175,7 @@ ScreenManager:
             
             ScrollView:
                 size_hint_y: None
-                height: dp(400)  # Ajusta este valor según sea necesario
+                height: dp(400)  
 
                 MDList:
                     id: bets_list
@@ -257,20 +257,19 @@ class LoginScreen(Screen):
     pass
 
 class WelcomeScreen(Screen):
-    user_id = None  # Asumiremos que este valor se establece en alguna parte antes de entrar a la pantalla
+    user_id = None  
 
     def on_pre_enter(self, *args):
-        # Programar la actualización cada 30 segundos
+        # Programmer la mise à jour toutes les 30 secondes
         self.update_bets()
         Clock.schedule_interval(lambda dt: self.update_bets(), 30)
 
     def update_bets(self):
-        # Limpiar la lista cada vez que se entra a la pantalla para evitar duplicados
+        # Nettoyer la liste à chaque accès à l'écran pour éviter les doublons
         self.ids.bets_list.clear_widgets()
         
-        # Intenta conectarte a la base de datos y obtener las apuestas del usuario
+        # Essayer de se connecter à la base de données et d'obtenir les paris de l'utilisateur
         try:
-            # Establecer conexión a la base de datos MySQL
             conn = mysql.connector.connect(
                 host=db_host,
                 user=db_user,
@@ -278,9 +277,7 @@ class WelcomeScreen(Screen):
                 database=db_name
             )
             cursor = conn.cursor()
-            # Asegúrate de que 'user_id' está definido y no es None
             if self.user_id is not None:
-                # Utiliza parámetros seguros para prevenir la inyección de SQL
                 cursor.execute("""
                     SELECT matchs.id, matchs.equipe1, matchs.equipe2, matchs.jour, matchs.debut, 
                     matchs.fin, matchs.score, matchs.statut, mises.mise1, mises.mise2, mises.resultat1, mises.resultat2, mises.equipe1, mises.equipe2, matchs.vainqueur, matchs.commentaires
@@ -290,19 +287,16 @@ class WelcomeScreen(Screen):
                 """, (self.user_id,))
                 self.user_bets = cursor.fetchall()
             else:
-                # Manejar caso en el que 'user_id' no está definido (por ejemplo, mostrar un mensaje de error)
                 self.user_bets = []
-
-            # Cerrar la conexión a la base de datos
             cursor.close()
             conn.close()
 
         except mysql.connector.Error as err:
             print(f"Error: {err}")
-            self.user_bets = []  # Resetear la lista de apuestas en caso de error
+            self.user_bets = []  # Réinitialiser la liste des paris en cas d'erreur
 
         for bet in self.user_bets:
-            # Formatear la información de la apuesta para mostrarla en tres líneas
+            # Formater les informations du pari pour affichage sur trois lignes
             bet_info = {
                 'equipe1': bet[1],
                 'equipe2': bet[2],
@@ -340,16 +334,15 @@ class WelcomeScreen(Screen):
             self.ids.bets_list.add_widget(list_item)
 
     def open_bet_details(self, bet_info):
-    # This function opens the bet details screen with the provided bet information.
-    # If a bet_info value is None, it will not be displayed.
+        # Cette fonction ouvre l'écran des détails du pari avec les informations du pari fournies. Si une valeur de bet_info est None, elle ne sera pas affichée.
         bet_detail_screen = self.manager.get_screen('bet_detail')
         bet_detail_screen.bet_data = bet_info
 
-         # Determinar el color para 'resultat1' y 'resultat2' en base a 'vainqueur'
+         # Déterminer la couleur pour 'resultat1' et 'resultat2' en fonction de 'vainqueur'
         couleur_resultat1 = '33ff33' if bet_info.get('vainqueur') == bet_info.get('equipemise1') else 'ff3333'
         couleur_resultat2 = '33ff33' if bet_info.get('vainqueur') == bet_info.get('equipemise2') else 'ff3333'
     
-    # Creating a list of strings for each bet detail
+        # Créer une liste de chaînes de caractères pour chaque détail de pari
         details = [
             f"{bet_info['equipe1']} VS {bet_info['equipe2']}",
             f"Debut: {bet_info['debut']}",
@@ -363,14 +356,14 @@ class WelcomeScreen(Screen):
             f"Vainqueur: {bet_info['vainqueur']}" if bet_info['vainqueur'] != '-' else ""
         ]
     
-        # Joining the details and filtering out empty strings
+        # Joindre les détails et filtrer les chaînes vides
         detail_text = "\n".join(filter(None, details))
 
         bet_detail_screen.ids.detail_label.markup = True
-        # Setting the label text to the joined details
+    
         bet_detail_screen.ids.detail_label.text = detail_text
 
-        # Changing the current screen to the bet detail screen
+        # Changer l'écran actuel pour l'écran de détail du pari
         self.manager.current = 'bet_detail'
 
     def on_leave(self, *args):
@@ -395,73 +388,57 @@ class MyApp(MDApp):
         password = login_screen.ids.password_field.text
 
         if not username or not password:
-            self.show_error_dialog("Por favor, introduce tanto el correo electrónico como la contraseña.")
+            self.show_error_dialog("Veuillez saisir l'adresse e-mail et le mot de passe")
             self.screen_manager.current = 'login'
             return
-
-        try:
-            
+        try: 
             conn = mysql.connector.connect(host=db_host, user=db_user, password=db_password, database=db_name)
             cursor = conn.cursor()
             query = "SELECT * FROM users WHERE email = %s"
             cursor.execute(query, (username,))
             user = cursor.fetchone()
-
             if user:
-
                 stored_password_hash = user[4]
-                
-
-         
-                if check_password_hash(stored_password_hash, password):
-                  
+                if check_password_hash(stored_password_hash, password):           
                     welcome_screen = self.screen_manager.get_screen('welcome')
                     welcome_screen.user_id = user[0]
                     self.screen_manager.current = 'welcome'
                 else:
-                    # Falla de autenticación
-                     self.show_error_dialog("La contraseña es incorrecta.")
+                     self.show_error_dialog("Le mot de passe est incorrect")
             else:
-                # Usuario no encontrado
-                 self.show_error_dialog("El usuario no fue encontrado.")
+                 self.show_error_dialog("L'utilisateur n'a pas été trouvé.")
 
             cursor.close()
             conn.close()
-
         except mysql.connector.Error as err:
-            self.show_error_dialog("Error al conectarse a la base de datos.")
+            self.show_error_dialog("Erreur lors de la connexion à la base de données.")
         
     def go_to_login(self):
         self.screen_manager.current = 'login'
     
     def go_to_welcome(self):
-        # Cambia la pantalla actual a 'welcome'
         self.screen_manager.current = 'welcome'
 
     def show_error_dialog(self, message):
-        # Define el botón del diálogo aquí para asegurarte de que se recrea cada vez
+        # Définir le bouton du dialogue ici pour vous assurer qu'il est recréé à chaque fois
         ok_button = MDFlatButton(
             text="OK",
             theme_text_color="Custom",
             text_color=self.theme_cls.primary_color,
             on_release=lambda instance: self.dialog.dismiss()
         )
-
-        # Si el diálogo ya existe, simplemente actualizamos el texto y los botones
         if hasattr(self, 'dialog'):
             self.dialog.text = message
             self.dialog.buttons = [ok_button]
         else:
-            # Crear el diálogo si no existe
             self.dialog = MDDialog(
                 text=message,
                 buttons=[ok_button]
             )
-
         self.dialog.open()
 
     def close_dialog(self, instance_button):
-        # Desvincular el evento para evitar referencias circulares y luego cerrar el diálogo
+        # Détacher l'événement pour éviter les références circulaires, puis fermer le dialogue
         instance_button.unbind(on_release=self.close_dialog)
         self.dialog.dismiss()
 
