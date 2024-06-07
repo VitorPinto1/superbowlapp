@@ -29,7 +29,7 @@ db_password = os.environ.get('DB_PASSWORD')
 db_name = os.environ.get('DB_NAME')
 db_port = os.environ.get('DB_PORT')
 
-print(f"Host: {db_host}, User: {db_user}, DB: {db_name} , DB: {db_port}")
+
 
 Window.size = (360, 640)
 
