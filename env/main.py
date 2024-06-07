@@ -27,6 +27,9 @@ db_host = os.environ.get('DB_HOST')
 db_user = os.environ.get('DB_USER')
 db_password = os.environ.get('DB_PASSWORD')
 db_name = os.environ.get('DB_NAME')
+db_port = os.environ.get('DB_PORT')
+
+print(f"Host: {db_host}, User: {db_user}, DB: {db_name} , DB: {db_port}")
 
 Window.size = (360, 640)
 
@@ -274,7 +277,8 @@ class WelcomeScreen(Screen):
                 host=db_host,
                 user=db_user,
                 password=db_password,
-                database=db_name
+                database=db_name,
+                port=db_port
             )
             cursor = conn.cursor()
             if self.user_id is not None:
@@ -392,7 +396,13 @@ class MyApp(MDApp):
             self.screen_manager.current = 'login'
             return
         try: 
-            conn = mysql.connector.connect(host=db_host, user=db_user, password=db_password, database=db_name)
+            conn = mysql.connector.connect(
+                host=db_host, 
+                user=db_user, 
+                password=db_password, 
+                database=db_name, 
+                port=db_port
+            )
             cursor = conn.cursor()
             query = "SELECT * FROM users WHERE email = %s"
             cursor.execute(query, (username,))
