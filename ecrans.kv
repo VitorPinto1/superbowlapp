@@ -1,0 +1,194 @@
+#:kivy 2.2.1
+
+ScreenManager:
+    canvas.before:
+        Color:
+            rgba: 0, 0, 0, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+   
+    LoginEcran:
+    WelcomeEcran:
+    PariDetailEcran:
+
+<LoginEcran>:
+    name: 'login'
+    FloatLayout:
+        canvas.before:
+            Color:
+                rgba: 0, 0, 0, 1  
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        Image:
+            source: 'sources/super_bowl_logo.png'
+            size_hint: 1, None
+            height: '50dp'
+            pos_hint: {"top": 0.98}
+        MDCard:
+            orientation: 'vertical'
+            size_hint: None, None
+            size: dp(320), dp(400)
+            pos_hint: {"center_x": .5, "center_y": .55}
+            elevation: 1
+            padding: dp(20)
+            spacing: dp(20)
+            radius: [25, 25, 25, 25]
+            canvas.before:
+                Color:
+                    rgba: 0.435, 0.259, 0.757, 1
+                BoxShadow:
+                    pos: self.pos
+                    size: self.size
+                    offset: 0, 0
+                    spread_radius: -20, -20
+                    border_radius: 10, 10, 10, 10
+                    blur_radius: 80
+            MDLabel:
+                text: 'Login'
+                theme_text_color: 'Primary'
+                font_style: 'H4'
+                size_hint_y: None
+                height: self.texture_size[1]
+                pos_hint: {'center_y': .20}
+                halign: 'center'
+            MDTextField:
+                id: username_field
+                hint_text: 'Email'
+                required: True
+                size_hint_x: 1
+                pos_hint: {"center_x": .5}
+            MDTextField:
+                id: password_field
+                hint_text: 'Mot de passe'
+                required: True
+                password: True
+                size_hint_x: 1
+                pos_hint: {"center_x": .5}
+            MDRaisedButton:
+                text: 'Se connecter'
+                on_release: root.login()
+                size_hint_x: 0.5
+                size_hint_y: None
+                height: dp(50)
+                pos_hint: {"center_x": .5}
+                md_bg_color: 0.435, 0.259, 0.757, 1
+
+<WelcomeEcran>:
+    name: 'welcome'
+    FloatLayout:
+        canvas.before:
+            Color:
+                rgba: 0, 0, 0, 1  
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        Image:
+            source: 'sources/super_bowl_logo.png'
+            size_hint: 1, None
+            height: '50dp'
+            pos_hint: {"top": 0.98}
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: 1, 1
+            spacing: dp(10)
+            padding: dp(20)
+            MDLabel:
+                text: 'Mises:'
+                theme_text_color: 'Custom'
+                text_color: 1, 1, 1, 1
+                font_style: 'H4'
+                size_hint_y: None
+                height: self.texture_size[1]
+                halign: 'center'
+                padding_y: dp(10)
+            MDCard:
+                orientation: 'vertical'
+                size_hint: 1, None
+                height: self.minimum_height
+                padding: dp(10)
+                spacing: dp(10)
+                elevation: 1
+                radius: [25, 25, 25, 25]
+                canvas.before:
+                    Color:
+                        rgba: 0.435, 0.259, 0.757, 1
+                    BoxShadow:
+                        pos: self.pos
+                        size: self.size
+                        offset: 0, 0
+                        spread_radius: -20, -20
+                        border_radius: 10, 10, 10, 10
+                        blur_radius: 80
+                ScrollView:
+                    size_hint_y: None
+                    height: dp(400)
+                    MDList:
+                        id: bets_list
+            MDRaisedButton:
+                text: 'Retourner au login'
+                on_release: app.go_to_login()
+                size_hint_x: 0.5
+                size_hint_y: None
+                height: dp(50)
+                pos_hint: {"center_x": .5}
+                md_bg_color: 0.435, 0.259, 0.757, 1
+
+<PariDetailEcran>:
+    name: 'pari_detail'
+    FloatLayout:
+        canvas.before:
+            Color:
+                rgba: 0, 0, 0, 1  
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        Image:
+            source: 'sources/super_bowl_logo.png'
+            size_hint: 1, None
+            height: '50dp'
+            pos_hint: {"top": 0.98}
+        MDLabel:
+            text: 'Détails du match'
+            theme_text_color: 'Custom'
+            text_color: 1, 1, 1, 1
+            font_style: 'H4'
+            size_hint_y: None
+            height: self.texture_size[1]
+            halign: 'center'
+            padding_y: dp(10)
+            pos_hint: {"center_x": 0.5, "top": 0.86}
+        MDCard:
+            size_hint: None, None
+            size: "260dp", "200dp"
+            pos_hint: {"center_x": 0.5, "top": 0.7}
+            elevation: 1
+            padding: "8dp"
+            spacing: "10dp"
+            radius: [25, 25, 25, 25]
+            canvas.before:
+                Color:
+                    rgba: 0.435, 0.259, 0.757, 1
+                BoxShadow:
+                    pos: self.pos
+                    size: self.size
+                    offset: 0, 0
+                    spread_radius: -20, -20
+                    border_radius: 10, 10, 10, 10
+                    blur_radius: 80
+            MDLabel:
+                id: detail_label
+                text: ''
+                halign: 'center'
+                valign: 'top'
+                size_hint_y: None
+                height: self.texture_size[1]
+                pos_hint: {"center_x": 0.5, "top": 0.98}
+        MDRaisedButton:
+            text: 'Retourner'
+            on_release: app.go_to_welcome()
+            size_hint: None, None
+            size: "200dp", "50dp"
+            pos_hint: {"center_x": .5, "top": 0.1}
+            md_bg_color: 0.435, 0.259, 0.757, 1
