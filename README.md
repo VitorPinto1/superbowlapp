@@ -58,3 +58,5 @@ Contient des utilitaires et outils utilisés par l'application.
 Fichier ecrans.kv: Définit les styles et la disposition visuelle des différents écrans de l'application.
 
 Fichier main.py: Point de départ de l'application. Ce fichier initialise l'application, charge la disposition définie dans ecrans.kv, et configure le ScreenManager pour gérer la navigation entre les différents écrans. Configuration des variables d'environnement pour la base de données. Initialisation et affichage de l'interface utilisateur.
+
+
