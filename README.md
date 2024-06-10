@@ -15,7 +15,6 @@ Lancez VSCode et installez l’extension « Python » publiée par Microsoft. Ap
   	« git clone https://github.com/VitorPinto1/superbowlapp.git »
   	« cd superbowlapp »
    
-
 2.  	Configuration de l'environnement
 
 Activez l'environnement virtuel Python dans le terminal :
