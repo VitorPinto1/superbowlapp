@@ -40,9 +40,8 @@ Exécutez l’application  dans le teminal :
 
 5. Accéder à l’application
 
-Conclusion
-
 En suivant ces étapes, vous devriez être en mesure de déployer l'application mobile localement et tester ses fonctionnalités.
+
 
 Dossier ecrans:
 Contient les fichiers Python (.py) pour les différents écrans de l'application. Chaque fichier dans ce dossier définit la logique et les interactions spécifiques pour un écran particulier de l'application.
