@@ -1,5 +1,4 @@
-anaconda-client==1.11.0
-anaconda-navigator==2.3.1
+
 
 backports.weakref==1.0.post1
 bcrypt==4.1.2
@@ -10,10 +9,7 @@ certifi==2023.7.22
 charset-normalizer==3.2.0
 click==7.1.2
 clyent==1.2.2
-conda==22.9.0
-conda-build==3.22.0
-conda-repo-cli==1.0.20
-conda-verify==3.4.2
+
 
 distlib==0.3.7
 dnspython==2.7.0
