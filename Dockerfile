@@ -19,3 +19,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 ENV DISPLAY=:0
 
 CMD ["python", "main.py"]
+
