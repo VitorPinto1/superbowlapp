@@ -7,6 +7,7 @@ Prérequis
 -  	Git
 -  	Python 3.9
 -  	MySQL: Le serveur de base de données MySQL doit être en cours d'exécution. AivenCloud
+- 	MongoDB
 
 1. Installation et déploiement
 
@@ -50,10 +51,12 @@ Contient les fichiers Python (.py) pour les différents écrans de l'application
 - login_screen.py : Gestion de la logique pour l'écran de connexion.
 - welcome_screen.py : Gestion de la logique pour l'écran d'accueil.
 - pari_detail_screen.py : Gestion de la logique pour l'écran des détails des paris.
+- notifications.py : Gestion des notifications
 
 Dossier outils:
 Contient des utilitaires et outils utilisés par l'application.
-- Fichier db_manager.py: Gestion des interactions avec la base de données. Ce fichier fournit des services pour la connexion à la base de données, la récupération des données des utilisateurs, la vérification des mots de passe et la gestion des paris.
+- db_manager.py: Gestion des interactions avec la base de données. Ce fichier fournit des services pour la connexion à la base de données, la 		 récupération des données des utilisateurs, la vérification des mots de passe et la gestion des paris.
+- mongo_outils.py: Gestion des interactions avec la base de données NoSQL MongoDB
 
 Fichier ecrans.kv: Définit les styles et la disposition visuelle des différents écrans de l'application.
 

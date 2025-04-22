@@ -11,6 +11,7 @@ ScreenManager:
     LoginEcran:
     WelcomeEcran:
     PariDetailEcran:
+    NotificationsEcran:
 
 <LoginEcran>:
     name: 'login'
@@ -86,9 +87,19 @@ ScreenManager:
                 size: self.size
         Image:
             source: 'sources/super_bowl_logo.png'
-            size_hint: 1, None
-            height: '50dp'
-            pos_hint: {"top": 0.98}
+            size_hint: None, None
+            size: dp(200), dp(50)  
+            pos_hint: {"top": 0.98, "center_x": 0.5}
+            allow_stretch: True
+
+        MDIconButton:
+            id: notification_button
+            icon: 'bell-outline'
+            on_release: app.go_to_notifications(root.user_id)
+            theme_text_color: 'Custom'
+            text_color: 1, 1, 1, 1
+            user_font_size: "24sp"
+            pos_hint: {"top": 0.98, "right": 0.98}
         BoxLayout:
             orientation: 'vertical'
             size_hint: 1, 1
@@ -103,6 +114,8 @@ ScreenManager:
                 height: self.texture_size[1]
                 halign: 'center'
                 padding_y: dp(10)
+          
+
             MDCard:
                 orientation: 'vertical'
                 size_hint: 1, None
@@ -135,6 +148,7 @@ ScreenManager:
                 pos_hint: {"center_x": .5}
                 md_bg_color: 0.435, 0.259, 0.757, 1
 
+       
 <PariDetailEcran>:
     name: 'pari_detail'
     FloatLayout:
@@ -146,9 +160,19 @@ ScreenManager:
                 size: self.size
         Image:
             source: 'sources/super_bowl_logo.png'
-            size_hint: 1, None
-            height: '50dp'
-            pos_hint: {"top": 0.98}
+            size_hint: None, None
+            size: dp(200), dp(50)  
+            pos_hint: {"top": 0.98, "center_x": 0.5}
+            allow_stretch: True
+
+        MDIconButton:
+            id: notification_button
+            icon: 'bell-outline'
+            on_release: app.go_to_notifications(root.user_id)
+            theme_text_color: 'Custom'
+            text_color: 1, 1, 1, 1
+            user_font_size: "24sp"
+            pos_hint: {"top": 0.98, "right": 0.98}
         MDLabel:
             text: 'Détails du match'
             theme_text_color: 'Custom'
@@ -192,3 +216,61 @@ ScreenManager:
             size: "200dp", "50dp"
             pos_hint: {"center_x": .5, "top": 0.1}
             md_bg_color: 0.435, 0.259, 0.757, 1
+
+<NotificationsEcran>:
+    name: 'notifications'
+    FloatLayout:
+        canvas.before:
+            Color:
+                rgba: 0, 0, 0, 1  
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        Image:
+            source: 'sources/super_bowl_logo.png'
+            size_hint: 1, None
+            height: '50dp'
+            pos_hint: {"top": 0.98}
+        MDLabel:
+            text: 'Notifications'
+            theme_text_color: 'Custom'
+            text_color: 1, 1, 1, 1
+            font_style: 'H4'
+            size_hint_y: None
+            height: self.texture_size[1]
+            halign: 'center'
+            padding_y: dp(10)
+            pos_hint: {"center_x": 0.5, "top": 0.86}
+        MDCard:
+            size_hint: None, None
+            size: "320dp", "370dp"
+            pos_hint: {"center_x": 0.5, "top": 0.7}
+            elevation: 1
+            padding: "8dp"
+            spacing: "10dp"
+            radius: [25, 25, 25, 25]
+            canvas.before:
+                Color:
+                    rgba: 0.435, 0.259, 0.757, 1
+                BoxShadow:
+                    pos: self.pos
+                    size: self.size
+                    offset: 0, 0
+                    spread_radius: -20, -20
+                    border_radius: 10, 10, 10, 10
+                    blur_radius: 80
+            ScrollView:
+                size_hint_y: None
+                height: dp(370)
+                MDList:
+                    id: stats_list
+              
+        MDRaisedButton:
+            text: 'Retourner'
+            on_release: app.go_to_welcome()
+            size_hint: None, None
+            size: "200dp", "50dp"
+            pos_hint: {"center_x": .5, "top": 0.1}
+            md_bg_color: 0.435, 0.259, 0.757, 1
+
+        

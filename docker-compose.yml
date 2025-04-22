@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  apppython:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: apppython_container
+    environment:
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    stdin_open: true
+    tty: true

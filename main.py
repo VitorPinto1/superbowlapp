@@ -2,8 +2,7 @@ from kivy.core.window import Window
 from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import ScreenManager
-from ecrans import LoginEcran, WelcomeEcran, PariDetailEcran
-
+from ecrans import LoginEcran, WelcomeEcran, PariDetailEcran, NotificationsEcran
 import os
 from dotenv import load_dotenv
 
@@ -19,13 +18,13 @@ Window.size = (360, 640)
 
 class MyApp(MDApp):
     def build(self):
-        # Charger le fichier KV 
         Builder.load_file('ecrans.kv')
         # Créer un ScreenManager pour gérer les différentes écrans
         self.screen_manager = ScreenManager()
         self.screen_manager.add_widget(LoginEcran(name='login'))
         self.screen_manager.add_widget(WelcomeEcran(name='welcome'))
         self.screen_manager.add_widget(PariDetailEcran(name='pari_detail'))
+        self.screen_manager.add_widget(NotificationsEcran(name='notifications'))
         return self.screen_manager
     
     def on_start(self):
@@ -41,6 +40,11 @@ class MyApp(MDApp):
     # Méthode pour changer l'écran actuel à l'écran d'accueil
     def go_to_welcome(self):
         self.screen_manager.current = 'welcome'
+
+    def go_to_notifications(self, user_id):
+        notifications_screen = self.screen_manager.get_screen('notifications')
+        notifications_screen.user_id = user_id
+        self.screen_manager.current = 'notifications'
 
 if __name__ == '__main__':
     MyApp().run()
