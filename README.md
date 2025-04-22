@@ -44,7 +44,7 @@ Exécutez l’application  dans le teminal :
 En suivant ces étapes, vous devriez être en mesure de déployer l'application mobile localement et tester ses fonctionnalités.
 
 
-# Information des archives 
+Information des archives 
 
 Dossier ecrans:
 Contient les fichiers Python (.py) pour les différents écrans de l'application. Chaque fichier dans ce dossier définit la logique et les interactions spécifiques pour un écran particulier de l'application.
@@ -63,3 +63,28 @@ Fichier ecrans.kv: Définit les styles et la disposition visuelle des différent
 Fichier main.py: Point de départ de l'application. Ce fichier initialise l'application, charge la disposition définie dans ecrans.kv, et configure le ScreenManager pour gérer la navigation entre les différents écrans. Configuration des variables d'environnement pour la base de données. Initialisation et affichage de l'interface utilisateur.
 
 
+Déploiement avec Docker
+
+Prérequis :
+
+- Docker Desktop installé
+
+Lancer l'application avec Docker Compose
+
+	« docker-compose up »
+
+Construction manuelle 
+Construire et lancer sans docker-compose :
+
+	«	docker build -t vitorpinto500/apppython:latest .
+		docker run -it --rm -e DISPLAY=host.docker.internal:0 -v /tmp/.X11-unix:/tmp/.X11-unix vitorpinto500/apppython:latest
+
+CI/CD à chaque git push sur main :
+
+- L'image Docker est automatiquement construite avec GitHub Actions
+
+- L'image est poussée sur DockerHub sous : vitorpinto500/apppython:latest
+
+Auteur
+
+Projet réalisé par Vitor Pinto Passionné par le développement et l'IA.
